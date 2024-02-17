@@ -1,29 +1,56 @@
-<!-- <app-header [applicationConfig]="applicationConfig" (menuClick)="sidenav.toggleSidenavOpened()"></app-header> -->
-<app-header [applicationConfig]="applicationConfig" (menuClick)="onMenuClick($event)"></app-header>
-<!--
-    (menuClick)="onMenuClick()"
-            |
-            V
-    HeaderComponent.menuClick.subscribe($event => {
-        onMenuClick($event)
-    })
- -->
+<app-header
+    [applicationConfig]="applicationConfig"
+    (menuClick)="sidenav.toggleSidenavOpened()"
+></app-header>
+<!-- <app-sidenav #sidenav [navigationTemplate]="navigationTemplate"> -->
+<app-sidenav #sidenav>
+    <!-- Content Sidenav Component -->
+    <p>Hello</p>
+    <p>My name Egor</p>
 
-<!-- <app-header applicationConfig="{{applicationConfig}}"></app-header> -->
-<app-products-list></app-products-list>
-<!-- <p>TEST</p> -->
-<!-- <app-sidenav #sidenav></app-sidenav> -->
-<!-- <app-sidenav #sidenav [(isSidenavOpened)]="needShowSidenav"></app-sidenav> -->
-<!-- <app-sidenav
-    [isSidenavOpened]="needShowSidenav"
-    (isSidenavOpenedChange)="needShowSidenav = $event"
-></app-sidenav> -->
+    <!-- <ng-template #navigationTemplate>
+        {{applicationConfig.title}}
+        <mat-list role="list">
+            <mat-list-item role="listitem">Item 1</mat-list-item>
+            <mat-list-item role="listitem">Item 2</mat-list-item>
+            <mat-list-item role="listitem">Item 3</mat-list-item>
+        </mat-list>
+    </ng-template> -->
+    <div ngProjectAs="list">
+        {{ applicationConfig.title }}
+        <mat-list role="list">
+            <mat-list-item role="listitem">Item 1</mat-list-item>
+            <mat-list-item role="listitem">Item 2</mat-list-item>
+            <mat-list-item role="listitem">Item 3</mat-list-item>
+        </mat-list>
+    </div>
+    <!-- <ng-container ngProjectAs="list">
+        {{applicationConfig.title}}
+        <mat-list role="list">
+            <mat-list-item role="listitem">Item 1</mat-list-item>
+            <mat-list-item role="listitem">Item 2</mat-list-item>
+            <mat-list-item role="listitem">Item 3</mat-list-item>
+        </mat-list>
+    </ng-container> -->
+</app-sidenav>
 
-<!--
-    (isSidenavOpenedChange)="needShowSidenav = $event"
-            |
-            V
-    SidenavComponent.isSidenavOpenedChange.subscribe($event => {
-        needShowSidenav = $event
-    })
- -->
+<!-- Homework stand -->
+
+<!-- Switch template -->
+
+<!-- <app-popup-host [template]="switchTemplate ? first : second"></app-popup-host> -->
+
+<!-- or -->
+
+<!-- Close template -->
+
+<app-popup-host [template]="!closeTemplate ? first : null"></app-popup-host>
+
+<ng-template #first>
+    <h2>First</h2>
+    <p>Is first template</p>
+</ng-template>
+<ng-template #second>
+    <h2>Second</h2>
+    <p>Is second template</p>
+</ng-template>
