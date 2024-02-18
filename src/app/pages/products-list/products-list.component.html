@@ -1,5 +1,31 @@
-<app-card class="card" [product]="products[0]" (buy)="onProductBuy($event)"></app-card>
-<app-card class="card" [product]="products[1]" (buy)="onProductBuy($event)"></app-card>
-<app-card class="card" [product]="products[2]" (buy)="onProductBuy($event)"></app-card>
-<app-card class="card" [product]="products[3]" (buy)="onProductBuy($event)"></app-card>
-<app-card class="card" [product]="products[4]" (buy)="onProductBuy($event)"></app-card>
+<!-- <ng-template [ngIf]="products"> -->
+<!-- <ng-template [appIf]="products" let-value="appIf" let-defaultValueFromContext="$implicit">
+    {{value || 'empty'}}
+    {{defaultValueFromContext || 'empty'}}
+    <app-card class="card" [product]="value[0] || null"></app-card>
+    <app-card class="card" [product]="value[1] || null"></app-card>
+    <app-card class="card" [product]="value[2] || null"></app-card>
+    <app-card class="card" [product]="value[3] || null"></app-card>
+    <app-card class="card" [product]="value[4] || null"></app-card>
+
+    <app-card class="card" [product]="products?.[0] || null"></app-card>
+    <app-card class="card" [product]="products?.[1] || null"></app-card>
+    <app-card class="card" [product]="products?.[2] || null"></app-card>
+    <app-card class="card" [product]="products?.[3] || null"></app-card>
+    <app-card class="card" [product]="products?.[4] || null"></app-card>
+</ng-template> -->
+
+<ng-template let-value [ngIf]="products" [ngIfElse]="loaderTemplate">
+    <!-- Раскомментировать div при выполнении ДЗ -->
+    <div appScrollWithLoading class="scroll-container" (loadData)="onLoad($event)">
+        <app-card class="card" [product]="value[0] || null"></app-card>
+        <app-card class="card" [product]="value[1] || null"></app-card>
+        <app-card class="card" [product]="value[2] || null"></app-card>
+        <app-card class="card" [product]="value[3] || null"></app-card>
+        <app-card class="card" [product]="value[4] || null"></app-card>
+    </div>
+</ng-template>
+
+<ng-template #loaderTemplate>
+    <mat-spinner></mat-spinner>
+</ng-template>
