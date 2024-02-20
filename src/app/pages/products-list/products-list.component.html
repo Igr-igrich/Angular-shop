@@ -1,23 +1,30 @@
-<!-- <ng-template let-value [appIf]="products"> -->
-<!-- <ng-template
-    [ngIf]="products"
-    [ngIfElse]="loaderTemplate"
-    [ngIfThen]="loaderTemplate"
-    let-valueProp="ngIf"
-    let-value
-> -->
-<!-- <div
-    *ngIf="products; else loaderTemplate; let valueProp = ngIf; let value"
-    class="scroll-container"
-> -->
-<!-- <div
-    *ngIf="products; else loaderTemplate; ngIf as valueProp; $implicit as value"
-    class="scroll-container"
-> -->
-<!-- {{ data }} -->
-<div *ngIf="products as valueProp; else loaderTemplate; let value" class="scroll-container">
-    <!-- Раскомментрировать для ДЗ -->
+<div *ngIf="products$ | async as products; else loaderTemplate" class="scroll-container">
+    <!-- easy -->
+    <!-- <ng-container
+		*appPagination="
+			let productsGroup of (products | productsFilter : name);
+			chankSize: 4;
+			let pageIndexes = pageIndexes;
+			let activeIndex = index;
+			let next = next;
+			let back = back;
+			let selectIndex = selectIndex
+		"
+	> -->
+
+    <!-- hard -->
     <ng-container
+        *appPagination="
+            let productsGroup of products | filterByProperty : propertyName : searchPropertyValue;
+            chankSize: 4;
+            let pageIndexes = pageIndexes;
+            let activeIndex = index;
+            let next = next;
+            let back = back;
+            let selectIndex = selectIndex
+        "
+    >
+        <!-- <ng-container
         *appPagination="
             let productsGroup of products;
             chankSize: 4;
@@ -27,7 +34,7 @@
             let back = back;
             let selectIndex = selectIndex
         "
-    >
+    > -->
         <div class="cards">
             <app-card
                 *ngFor="let product of productsGroup; trackBy: trackById"
@@ -36,7 +43,6 @@
             ></app-card>
         </div>
         <div class="pagination">
-            <!-- Add pagination control -->
             <button mat-icon-button (click)="back()">
                 <mat-icon>chevron_left</mat-icon>
             </button>
@@ -56,12 +62,7 @@
             </button>
         </div>
     </ng-container>
-    <!-- <app-card class="card" [product]="value[1]"></app-card>
-    <app-card class="card" [product]="value[2]"></app-card>
-    <app-card class="card" [product]="value[3]"></app-card>
-    <app-card class="card" [product]="value[4]"></app-card> -->
 </div>
-<!-- </ng-template> -->
 
 <ng-template #loaderTemplate>
     <mat-spinner></mat-spinner>

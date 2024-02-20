@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {ApplicationConfig} from '../../shared/application-config/application-config.interface';
+import {getCurrency} from '../../shared/currency/currency';
 
 @Component({
     selector: 'app-header',
@@ -12,14 +13,11 @@ export class HeaderComponent {
 
     @Output() readonly menuClick = new EventEmitter<void>();
 
-    get data(): string {
-        // eslint-disable-next-line no-console
-        console.log('Data calculated from HeaderComponent');
-
-        return 'Yes, data';
-    }
+    summ = 0;
 
     onMenuClick(_event: MouseEvent) {
         this.menuClick.emit();
     }
+
+    getCurrency = getCurrency;
 }

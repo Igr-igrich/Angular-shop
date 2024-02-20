@@ -1,13 +1,6 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {productsMock} from '../../shared/products/products.mock';
+import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {IProduct} from '../../shared/products/product.interface';
-
-/**
- * Mark Dirty:
- * 1. Input changed
- * 2. DOM Event listener
- * 3. ChangeDetectorRef.markForCheck().
- */
+import {ProductsStoreService} from '../../shared/products/products-store.service';
 
 @Component({
     selector: 'app-products-list',
@@ -16,38 +9,64 @@ import {IProduct} from '../../shared/products/product.interface';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsListComponent implements OnInit {
-    private productsStore: IProduct[] | null = null;
+    // private readonly productsStoreService = new ProductsStoreService();
+    // private readonly elementRef = inject(ElementRef);
 
-    constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
+    readonly products$ = this.productsStoreService.products$;
 
-    get products(): IProduct[] | null {
+    // for easy
+    name = 'Мышь';
+
+    // for hard
+    readonly propertyName = 'feedbacksCount' as const; // keyof IProduct
+    searchPropertyValue = 2;
+
+    // constructor(
+    //     @Inject(ChangeDetectorRef) private readonly changeDetectorRef: ChangeDetectorRef,
+    //     @Inject(ElementRef) private readonly elementRef: ElementRef,
+    // ) {
+    //     console.log(elementRef);
+    // }
+    // constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
+
+    // constructor(
+    //     @Inject(ProductsStoreService) private readonly productsStoreService: ProductsStoreService,
+    // ) {}
+    constructor(
+        private readonly productsStoreService: ProductsStoreService,
+        @Inject('ProductsStoreService')
+        private readonly productsStoreServiceStr: ProductsStoreService, // @Inject('name') private readonly name: string,
+    ) {
         // eslint-disable-next-line no-console
-        // console.log('products getter');
-
-        return this.productsStore;
-    }
-
-    get data(): string {
+        console.log(this.productsStoreServiceStr, this.productsStoreService);
         // eslint-disable-next-line no-console
-        console.log('Data calculated');
-
-        return 'Yes, data';
+        console.log(this.productsStoreServiceStr === this.productsStoreService);
+        // eslint-disable-next-line no-console
+        // console.log(this.name);
     }
 
     ngOnInit(): void {
-        // setInterval(() => {}, 1000);
-        setTimeout(() => {
-            this.productsStore = productsMock;
-            this.changeDetectorRef.markForCheck();
-        }, 4000);
+        // console.log(this.elementRef);
+        this.productsStoreService.loadProducts();
+
+        // this.changeDetectorRef.detach();
+        // this.changeDetectorRef.detectChanges();
+
         // setTimeout(() => {
-        //     // this.productsStore = productsMock.map(item => ({...item, feedbacksCount: 2}));
-        //     productsMock.forEach(item => {
-        //         item.feedbacksCount = 2;
-        //     });
-        //     this.productsStore = [...productsMock];
+        //     this.products = productsMock;
+        //     this.changeDetectorRef.markForCheck();
+        //     // this.changeDetectorRef.detectChanges();
+        // }, 4000);
+
+        // setTimeout(() => {
+        //     this.changeDetectorRef.reattach();
         // }, 6000);
     }
+
+    // ngDoCheck() {
+    //     console.log('ngDoCheck');
+    //     this.changeDetectorRef.detectChanges();
+    // }
 
     trackById(_index: number, {_id}: IProduct) {
         return _id;
