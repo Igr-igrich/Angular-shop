@@ -1,14 +1,13 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
+    ElementRef,
     EventEmitter,
     Input,
-    OnInit,
     Output,
+    SkipSelf,
 } from '@angular/core';
 import {IProduct} from '../../../shared/products/product.interface';
-import {getCurrency} from '../../../shared/currency/currency';
 
 @Component({
     selector: 'app-card',
@@ -16,17 +15,14 @@ import {getCurrency} from '../../../shared/currency/currency';
     styleUrls: ['./card.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CardComponent implements OnInit {
+export class CardComponent {
     @Input() product: IProduct | null = null;
 
     @Output() readonly buy = new EventEmitter<IProduct['_id']>();
 
-    constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
-
-    ngOnInit(): void {
-        setInterval(() => {
-            this.changeDetectorRef.markForCheck();
-        }, 1000);
+    constructor(@SkipSelf() private readonly parentElementRef: ElementRef) {
+        // eslint-disable-next-line no-console
+        console.log(this.parentElementRef);
     }
 
     onProductBuy(event: Event) {
@@ -39,6 +35,4 @@ export class CardComponent implements OnInit {
     isStarActive(starIndex: number): boolean {
         return !!(this.product && this.product.rating >= starIndex);
     }
-
-    getCurrency = getCurrency;
 }
