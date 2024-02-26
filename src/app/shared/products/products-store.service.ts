@@ -1,4 +1,4 @@
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription, filter} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {IProduct} from './product.interface';
 import {ProductsApiService} from './products-api.service';
@@ -8,8 +8,10 @@ import {ProductsApiService} from './products-api.service';
 })
 export class ProductsStoreService {
     private readonly productsStore$ = new BehaviorSubject<IProduct[] | null>(null);
+    private readonly currentProductStore$ = new BehaviorSubject<IProduct | null>(null);
 
     private activeLoadProductsSubscription: Subscription | null = null;
+    private activeLoadProductSubscription: Subscription | null = null;
 
     constructor(private readonly productsApiService: ProductsApiService) {}
 
@@ -17,17 +19,40 @@ export class ProductsStoreService {
         return this.productsStore$.asObservable();
     }
 
-    loadProducts() {
+    get currentProduct$(): Observable<IProduct | null> {
+        return this.currentProductStore$.asObservable();
+    }
+
+    loadProducts(subcategoryId?: string | null) {
         if (this.activeLoadProductsSubscription) {
             this.activeLoadProductsSubscription.unsubscribe();
         }
 
+        this.productsStore$.next(null);
+
         this.activeLoadProductsSubscription = this.productsApiService
-            .getProducts$()
+            .getProducts$(subcategoryId)
             .subscribe(products => {
                 this.productsStore$.next(products);
 
                 this.activeLoadProductsSubscription = null;
+            });
+    }
+
+    loadProduct(productId: string) {
+        if (this.activeLoadProductSubscription) {
+            this.activeLoadProductSubscription.unsubscribe();
+        }
+
+        const productPreview = this.productsStore$.value?.find(({_id}) => _id === productId);
+
+        this.currentProductStore$.next(productPreview || null);
+
+        this.activeLoadProductSubscription = this.productsApiService
+            .getProduct$(productId)
+            .pipe(filter(Boolean))
+            .subscribe(product => {
+                this.currentProductStore$.next(product);
             });
     }
 }
